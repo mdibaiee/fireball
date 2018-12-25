@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fire Ball</title>
+
+  <style>
+    body, html {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      font-family: monospace;
+    }
+
+    #gui {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: white;
+      z-index: 2;
+      padding-left: 15px;
+      background: rgba(255, 255, 255, 0.3);
+      width: 200px;
+    }
+  </style>
+
+  <script src='lib/three.js'></script>
+  <script src='lib/Tween.js'></script>
+  <script src='lib/objects/Sky.js'></script>
+  <script src='lib/whs.js'></script>
+  <script src='lib/physics-module.js'></script>
+  <script src='lib/ammo.js'></script>
+  <script src='lib/mousetrap.js'></script>
+  <script src='lib/moment.min.js'></script>
+</head>
+<body>
+  <div id='gui'>
+    <p>
+      Time: <span id='time'>00:00:000</span>
+    </p>
+    <p>
+      Speed: <span id='speed'>000</span>
+    </p>
+    <p>
+      Score: <span id='score'>000</span>
+    </p>
+  </div>
+
+  <script src='src/utils.js'></script>
+  <script src='src/config.js'></script>
+  <script src='src/gui.js'></script>
+  <script src='src/objects.js'></script>
+  <script src='src/world.js'></script>
+  <script src='src/ball.js'></script>
+  <script src='src/lights.js'></script>
+  <script src='src/helpers.js'></script>
+  <script src='src/scenes.js'></script>
+  <script src='src/controls.js'></script>
+  <script src='src/levels/0-basic.js'></script>
+  <script src='src/main.js'></script>
+</body>
+</html>

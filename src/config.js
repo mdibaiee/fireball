@@ -1,0 +1,7 @@
+const config = {
+  TURN_SPEED: 15,
+  SPEED_INCREASE: 15,
+  INITIAL_SPEED: 150,
+  FINAL_SPEED: 600,
+  MAX_SPEED: 2000,
+}
