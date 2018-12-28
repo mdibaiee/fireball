@@ -3,6 +3,7 @@ const GUI = {
     score: document.getElementById('score'),
     speed: document.getElementById('speed'),
     time: document.getElementById('time'),
+    hits: document.getElementById('hits'),
   },
   setScore(s) {
     GUI.elements.score.textContent = Math.floor(s).toString().padStart(3, '0');
@@ -12,6 +13,9 @@ const GUI = {
   },
   setStartingTime() {
     GUI.startingTime = moment();
+  },
+  setHits(s) {
+    GUI.elements.hits.textContent = Math.floor(s).toString().padStart(2, '0');
   },
   tickTime() {
     const now = moment();

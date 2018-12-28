@@ -34,7 +34,7 @@ let ground;
 (function groundinit() {
   const WIDTH = 500;
   const SIZE = 1e5;
-  const mesh = new WHS.Plane({
+  ground = new WHS.Plane({
     geometry: {
       width: WIDTH,
       height: SIZE,
@@ -51,12 +51,14 @@ let ground;
       }),
       new PHYSICS.PlaneModule({
         mass: 0,
+        restitution: 0,
       }),
     ],
     material: new THREE.MeshPhongMaterial({ color: 0xffffff })
   });
 
-  ground = mesh;
+  ground.SIZE = SIZE;
+
   ground.addTo(app);
 }());
 

@@ -40,9 +40,13 @@ const entrance = () => {
     GUI.setStartingTime();
     const diff = camera.position.y - ball.position.y;
     ball.started = true;
+    level0();
+
+    audio.rumble.play();
 
     app.physics.addEventListener('update', function() {
-      camera.position.set(camera.position.x, ball.position.y + diff, ball.position.z + 130);
+      //camera.position.set(camera.position.x, ball.position.y + diff, ball.position.z + 130);
+      camera.position.set(ball.position.x, ball.position.y + diff, ball.position.z + 130);
       camera.native.lookAt(ball.position);
       directionalLight.position.set(directionalLight.position.x, directionalLight.position.y, ball.position.z - 300);
       GUI.setScore(-ball.position.z / 100);

@@ -1,10 +1,5 @@
 const RADIUS = 10;
 const SEGMENTS = 40;
-const material = new THREE.MeshLambertMaterial({
-  color: 0xFFFFFF,
-  emissive: 0xFF0000,
-  emissiveIntensity: 0.4,
-});
 const ballPhysics = new PHYSICS.SphereModule({
   mass: 2,
   friction: 0.5,
@@ -20,7 +15,11 @@ const ball = new WHS.Sphere({
     z: -30,
     y: 10
   },
-  material,
+  material: new THREE.MeshLambertMaterial({
+    color: 0xFFFFFF,
+    emissive: 0xFF0000,
+    emissiveIntensity: 0.4,
+  }),
 
   modules: [
     new WHS.TextureModule({
@@ -30,21 +29,16 @@ const ball = new WHS.Sphere({
   ],
 });
 
-const fireLight = new WHS.PointLight({
-  color: 0xff0000,
-  intensity: 5,
-});
-
 ball.physics = ballPhysics;
-ball.fireLight = fireLight;
 
 ball.addTo(app);
-ball.add(fireLight);
 
 camera.native.target = ball.native;
 
 ball.checkLife = () => {
-  if (ball.position.x > ground.geometry.parameters.width / 2 || ball.position.x < -ground.geometry.parameters.width / 2) {
+  if (ball.position.x > ground.geometry.parameters.width / 2
+      || ball.position.x < -ground.geometry.parameters.width / 2
+      || ball.position.z > -ground.SIZE) {
     location.reload();
   }
 }
@@ -79,36 +73,19 @@ ball.checkLife = () => {
         color: 0xffffff,
       });
 
-  new THREE.Geometry();
-  var smokeCount = 2000,
-      smokes = new THREE.Geometry(),
-      smokeMaterial = new THREE.PointsMaterial({
-        size: 1.5,
-        transparent: true,
-        color: 0x666666,
-        opacity: 0.5,
-      });
-
   const radius = ball.params.geometry.radius;
   const start = ball.position;
   for (var p = 0; p < particleCount; p++) {
-
-    // create a particle with random
-    // position values, -250 -> 250
     var pX = start.x + THREE.Math.randFloatSpread(radius),
         pY = start.y + THREE.Math.randFloatSpread(radius),
         pZ = start.z + THREE.Math.randFloatSpread(radius),
         particle = new THREE.Vector3(pX, pY, pZ)
 
-    particle.lifetime = ball.params.geometry.radius + THREE.Math.randFloat(1, 1 + FIRE_HEIGHT_RANDOMNESS) * FIRE_HEIGHT;
-    //particle.color.offsetHSL(Math.random(), 0, Math.random());
+    particle.lifetime = Math.random() < 0.5 ? 0 : ball.params.geometry.radius + THREE.Math.randFloat(0.5, 1 + FIRE_HEIGHT_RANDOMNESS) * FIRE_HEIGHT;
 
-    // add it to the geometry
     particles.vertices.push(particle);
     particles.colors.push(new THREE.Color(1, 0, 0));
   }
-
-  particles.colorsNeedUpdate = true;
 
   for (var i = 0; i < spriteCount; i++) {
     var pX = start.x + THREE.Math.randFloatSpread(radius),
@@ -116,29 +93,17 @@ ball.checkLife = () => {
         pZ = start.z + THREE.Math.randFloatSpread(radius),
         particle = new THREE.Vector3(pX, pY, pZ)
 
-    particle.lifetime = ball.params.geometry.radius + THREE.Math.randFloat(1, 1 + FIRE_HEIGHT_RANDOMNESS) * FIRE_HEIGHT;
+    particle.lifetime = Math.random() < 0.5 ? 0 :  ball.params.geometry.radius + THREE.Math.randFloat(0.5, 1 + FIRE_HEIGHT_RANDOMNESS) * FIRE_HEIGHT;
 
     sprites.vertices.push(particle);
   }
 
-  for (var i = 0; i < smokeCount; i++) {
-    var pX = start.x + THREE.Math.randFloatSpread(radius),
-        pY = start.y + THREE.Math.randFloat(radius),
-        pZ = start.z + THREE.Math.randFloatSpread(radius),
-        particle = new THREE.Vector3(pX, pY, pZ);
-
-    particle.lifetime = ball.params.geometry.radius + THREE.Math.randFloat(1, 1 + FIRE_HEIGHT_RANDOMNESS) * FIRE_HEIGHT * 1.5;
-
-    smokes.vertices.push(particle);
-  }
 
   // create the particle system
   var points = WHS.MeshComponent.from(new THREE.Points(particles, pMaterial));
   var spritesPoints = WHS.MeshComponent.from(new THREE.Points(sprites, spriteMaterial));
-  var smokePoints = WHS.MeshComponent.from(new THREE.Points(smokes, smokeMaterial));
-  smokePoints.isSmoke = true;
 
-  ball.fire = [points, spritesPoints, smokePoints];
+  ball.fire = [points, spritesPoints];
   ball.fire.forEach(fire => {
     fire.addTo(app);
   })
@@ -154,31 +119,39 @@ ball.checkLife = () => {
       );
 
       fire.geometry.vertices.forEach((v, i) => {
-        v.y += THREE.Math.randFloat(0, SPREAD_SPEED / 4);
-        v.x += THREE.Math.randFloatSpread(SPREAD_SPEED) + velocity.x * -0.02;
-        v.z += THREE.Math.randFloatSpread(SPREAD_SPEED) + velocity.z * -0.01;
+        let x = v.x + THREE.Math.randFloatSpread(SPREAD_SPEED) + velocity.x * -0.02;
+        let y = v.y + THREE.Math.randFloat(0, SPREAD_SPEED / 4);
+        let z = v.z + THREE.Math.randFloatSpread(SPREAD_SPEED) + velocity.z * -0.01;
 
-        if (fire.material.vertexColors === THREE.VertexColors) {
+        v.set(x, y, z);
+
+        if (!v.isSmoke && fire.material.vertexColors === THREE.VertexColors) {
           fire.geometry.colors[i].offsetHSL(7e-4, 0, 0);
         }
 
         if (v.y >= v.lifetime) {
-          if (fire.isSmoke) {
-            v.y = FIRE_HEIGHT/3 + THREE.Math.randFloat(0, FIRE_HEIGHT_RANDOMNESS);
+          if (!v.isSmoke && fire.material.vertexColors === THREE.VertexColors) {
+            v.isSmoke = true;
+            fire.geometry.colors[i].setHex(0x444444)
+            v.lifetime += FIRE_HEIGHT * 0.5;
           } else {
-            v.y = Math.min(radius, radius * velocity.z / -50);
-          }
+            y = Math.min(radius, radius * velocity.z / -50);
 
-          v.x = 0;
-          v.z = -ball.params.geometry.radius * 3;
+            x = 0;
+            z = -ball.params.geometry.radius * 3;
 
-          v.lifetime = ball.params.geometry.radius + THREE.Math.randFloat(1, 1 + FIRE_HEIGHT_RANDOMNESS) * FIRE_HEIGHT * (fire.isSmoke ? 1.5 : 1);
+            v.lifetime = ball.params.geometry.radius + THREE.Math.randFloat(1, 1 + FIRE_HEIGHT_RANDOMNESS) * FIRE_HEIGHT;
 
-          if (fire.material.vertexColors === THREE.VertexColors) {
-            const r = THREE.Math.randFloat(0.8, 1);
-            const g = THREE.Math.randFloat(0, 0.2);
-            const b = THREE.Math.randFloat(0, 0.2);
-            fire.geometry.colors[i].setRGB(r, g, b);
+            v.set(x, y, z);
+
+            v.isSmoke = false;
+
+            if (fire.material.vertexColors === THREE.VertexColors) {
+              const r = THREE.Math.randFloat(0.8, 1);
+              const g = THREE.Math.randFloat(0, 0.2);
+              const b = THREE.Math.randFloat(0, 0.2);
+              fire.geometry.colors[i].setRGB(r, g, b);
+            }
           }
         }
       });
@@ -189,5 +162,19 @@ ball.checkLife = () => {
       fire.geometry.verticesNeedUpdate = true;
     });
   });
+
+  const fireLight = new WHS.PointLight({
+    color: 0xff0000,
+    intensity: 5,
+  });
+  ball.fireLight = fireLight;
+  ball.add(fireLight);
 }());
 
+let hits = 0;
+ball.on('collision', (o, v, r, cn) => {
+  if (o.uuid === ground.native.uuid) return;
+  rand(audio.impacts).play();
+  hits++;
+  GUI.setHits(hits);
+});
