@@ -16,7 +16,7 @@ const app = new WHS.App([
 
   new PHYSICS.WorldModule({
     gravity: new THREE.Vector3(0, -100, 0),
-    ammo: 'http://localhost:8080/lib/ammo.js',
+    ammo: `${location.protocol}//${location.hostname}${location.pathname}lib/ammo.js`,
   }),
 
   new WHS.RenderingModule({ bgColor: 0x162129 }), // Apply THREE.WebGLRenderer
