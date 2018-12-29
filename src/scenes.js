@@ -40,7 +40,6 @@ const entrance = () => {
     GUI.setStartingTime();
     const diff = camera.position.y - ball.position.y;
     ball.started = true;
-    level0();
 
     audio.rumble.play();
 

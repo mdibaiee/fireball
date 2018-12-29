@@ -1,5 +1,5 @@
 const DFORCE = 6e3;
-const AFORCE = 500;
+const AFORCE = 1e4;
 const VFORCE = 1e4;
 
 Mousetrap.bind('left', () => {
@@ -19,8 +19,6 @@ Mousetrap.bind('right', () => {
 Mousetrap.bind('up', () => {
   if (!ball.started) return;
   ball.physics.applyCentralForce({ x: 0, y: 0, z: -AFORCE });
-  //ball.speed = Math.min(config.MAX_SPEED, Math.max(config.FINAL_SPEED, ball.speed + config.SPEED_INCREASE));
-  //ball.methods.updateVelocity();
 });
 
 //Mousetrap.bind('space', () => {
@@ -38,5 +36,3 @@ Mousetrap.bind('up', () => {
   ////ball.speed = Math.min(config.MAX_SPEED, Math.max(config.FINAL_SPEED, ball.speed - config.SPEED_INCREASE));
   ////ball.methods.updateVelocity();
 //});
-
-

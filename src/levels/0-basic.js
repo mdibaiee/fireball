@@ -4,10 +4,10 @@ function level0() {
   const BOX_SIZE = 100;
 
   function add({ x, y, z } = {}, { width, depth, height } = {}, rotation = {}) {
-    y = y || (tan * z) + BOX_SIZE/2;
     width = width || BOX_SIZE;
     height = height || BOX_SIZE;
     depth = depth || BOX_SIZE;
+    y = y || (tan * z) + height/2;
 
     rotation.x = rotation.x || -step;
     const box = new WHS.Box({
@@ -125,3 +125,4 @@ function level0() {
   }
 }
 
+level0();

@@ -3,14 +3,14 @@ const audio = {
     src: ['assets/audio/fire.wav'],
     autoplay: true,
     loop: true,
-    volume: 0.3
+    volume: 0.5
   }),
 
   music: new Howl({
     src: ['assets/audio/music.mp3'],
     autoplay: true,
     loop: true,
-    volume: 0.1,
+    volume: 0.3,
   }),
 
   rumble: new Howl({

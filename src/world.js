@@ -33,7 +33,7 @@ let ground;
 
 (function groundinit() {
   const WIDTH = 500;
-  const SIZE = 1e5;
+  const SIZE = 3e5;
   ground = new WHS.Plane({
     geometry: {
       width: WIDTH,
@@ -88,8 +88,6 @@ let ground;
     }),
   });
 
-  //lava.addTo(app);
-  //console.log(lava);
   ground.add(lava);
 }());
 

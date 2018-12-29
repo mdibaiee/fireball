@@ -38,7 +38,7 @@ camera.native.target = ball.native;
 ball.checkLife = () => {
   if (ball.position.x > ground.geometry.parameters.width / 2
       || ball.position.x < -ground.geometry.parameters.width / 2
-      || ball.position.z > -ground.SIZE) {
+      || ball.position.z < -ground.SIZE) {
     location.reload();
   }
 }
